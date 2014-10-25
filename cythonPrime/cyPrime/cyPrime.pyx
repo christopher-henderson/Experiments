@@ -10,13 +10,14 @@ def prime(int ceiling):
     cdef unsigned int primesFound
     cdef unsigned int n
     cdef double mid
-    cdef bool prime
+    cdef bool prime 
     n = 3
+    primes[0] = 2
     primesFound = 1
     while primesFound < ceiling:
         prime = True
         mid = sqrt(n)
-        for div in range(ceiling):
+        for div in range(primesFound): 
             if primes[div] > mid:
                 break
             elif n % primes[div] is 0:
@@ -27,6 +28,6 @@ def prime(int ceiling):
             primesFound += 1
         n += 2
     try:
-        return primes[-1]
+        return primes[ceiling-1]
     finally:
         free(primes)
