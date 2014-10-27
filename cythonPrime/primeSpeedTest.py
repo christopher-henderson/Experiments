@@ -1,16 +1,10 @@
 #!/usr/bin/env python
-from cyPrime import CyPrime
-from pyPrime import PyPrime
-from time import time
+from timeit import timeit
 
 # Testing done on a 4.7 GHz i7, Fedora 20
 
 # One million primes in ~1.8 seconds.
-start = time()
-print CyPrime(1000000)
-print (time()-start)
+print (timeit(setup='from cyPrime import CyPrime', stmt='CyPrime(1000000)', number=1))
 
 # One million primes in ~56.8 seconds.
-start = time()
-print PyPrime(1000000)
-print (time()-start)
+print (timeit(setup='from pyPrime import PyPrime', stmt='PyPrime(1000000)', number=1))
