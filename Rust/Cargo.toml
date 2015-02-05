@@ -1,0 +1,8 @@
+[package]
+name = "sup"
+version = "0.0.1"
+authors = ["Christopher Henderson <chris@chenderson.org>"]
+
+[[bin]]
+
+name = "hello_world"

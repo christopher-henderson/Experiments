@@ -1,0 +1,4 @@
+[root]
+name = "Rust Prime Number Finder"
+version = "0.0.1"
+

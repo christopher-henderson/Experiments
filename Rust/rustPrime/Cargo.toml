@@ -1,0 +1,8 @@
+[package]
+name = "Rust Prime Number Finder"
+version = "0.0.1"
+authors = ["Christopher Henderson <chris@chenderson.org>"]
+
+[[bin]]
+
+name = "rustPrime"
