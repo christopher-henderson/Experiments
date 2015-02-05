@@ -11,10 +11,17 @@ fn main() {
     primes[0] = 2;
     found += 1;
     while !(found < ceiling) {
-        testRoot = Float::sqrt(test);
+        testRoot = (test as f64).sqrt();
         isPrime = true;
-        for prime in 0..found {
-            if testRoot <= primes[prime] as f32 { 
+        for prime in primes.iter() {
+            if prime == 0 {
+                break;
+            }
+            if testRoot <= (prime.to_f64()) { 
+                isPrime = false;
+                break;
+            }
+            if test % prime == 0 {
                 isPrime = false;
                 break;
             }
