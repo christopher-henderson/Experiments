@@ -31,6 +31,9 @@ class NormalizedRational(object):
         elif origin:
             self.rational = (0, 0)
         else:
+            self.rational = self._normalizeRational(numerator, denominator)
+
+    def _normalizeRational(self, numerator, denominator):
             #===================================================================
             # Euclid's algorithm for GCD.
             # https://en.wikipedia.org/wiki/Euclidean_algorithm
@@ -43,7 +46,7 @@ class NormalizedRational(object):
                 temp = tempDenominator
                 tempDenominator = GCD % tempDenominator
                 GCD = temp
-            self.rational = self._foldQuadrantsIIIandIV(numerator//GCD, denominator//GCD)
+            return self._foldQuadrantsIIIandIV(numerator//GCD, denominator//GCD)
 
     def _foldQuadrantsIIIandIV(self, y, x):
         quadrantIII = y < 0 and x < 0
