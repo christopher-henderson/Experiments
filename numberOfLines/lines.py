@@ -38,6 +38,7 @@ class NormalizedRational(object):
             # Euclid's algorithm for GCD.
             # https://en.wikipedia.org/wiki/Euclidean_algorithm
             # @TODO research a possibly fast approach.
+            # @TODO attempt to implement https://en.wikipedia.org/wiki/Sch%C3%B6nhage%E2%80%93Strassen_algorithm
             #===================================================================
             GCD = abs(numerator)
             tempDenominator = abs(denominator)
@@ -57,9 +58,14 @@ class NormalizedRational(object):
             return (y, x)
 
     def __eq__(self, other):
-        if not isinstance(other, NormalizedRational):
+        if isinstance(other, NormalizedRational):
+            return self.rational == other.rational
+        elif isinstance(other, tuple):
+            return self.rational == other
+        elif isinstance(other, list) or isinstance(other, set):
+            return self.rational == tuple(other)
+        else:
             return False
-        return self.rational == other.rational
     
     def __hash__(self):
         return hash(self.rational)
@@ -68,7 +74,7 @@ def getNumLines(points):
     lines = set()
     for point in points:
         lines.add(NormalizedRational(point[1], point[0]))
-    if NormalizedRational(0, 0) in lines and len(lines) is not 1:
+    if (0, 0) in lines and len(lines) is not 1:
         return len(lines) - 1
     else:
         return len(lines)
