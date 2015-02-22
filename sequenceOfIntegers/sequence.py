@@ -3,13 +3,13 @@
 '''
 
 def recursiveLargestSequence(numbers):
+    #===========================================================================
+    # Growth function = n + sum(size of sequences)
+    # O(2n)
+    #===========================================================================
     unorderedSet = set(numbers)
     tailsOfSequences = set()
     largest = 0
-    #===========================================================================
-    # Only values that have NOT been placed into the tailsOfSequences set are candidates
-    # for being the head of a sequence.
-    #===========================================================================
     headsOfSequences = (num for num in unorderedSet if num not in tailsOfSequences)
         
     def recurseSequenceByStride(integer, stride):
@@ -26,7 +26,7 @@ def recursiveLargestSequence(numbers):
         #=======================================================================
         currentSize += recurseSequenceByStride(number, 1)
         #=======================================================================
-        # Add the integers bellow 'number'.
+        # Add the integers below 'number'.
         #=======================================================================
         currentSize += recurseSequenceByStride(number, -1)
         if currentSize > largest:
@@ -34,14 +34,14 @@ def recursiveLargestSequence(numbers):
     return largest
 
 def iterativeLargestSequence(numbers):
+    #===========================================================================
+    # Growth function = n + sum(size of sequences)
+    # O(2n)
+    #===========================================================================
     unorderedSet = set(numbers)
     tailsOfSequences = set()
     largest = 0
     currentSize = 0
-    #===========================================================================
-    # Only values that have NOT been placed into the tailsOfSequences set are candidates
-    # for being the head of a sequence.
-    #===========================================================================
     headsOfSequences = (num for num in unorderedSet if num not in tailsOfSequences)
     for number in headsOfSequences:
         currentSize = 1
