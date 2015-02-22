@@ -43,7 +43,7 @@ def one():
 def negatives():
     test = [-1,-2,-3,-4, -100, 101, -50]
     shuffle(test)
-    assert recursiveLargestSequence(test) is 4
+    assert recursiveLargestSequence(test) is 4, recursiveLargestSequence(test)
     assert iterativeLargestSequence(test) is 4
 
 @Test
@@ -52,6 +52,14 @@ def positives():
     shuffle(test)
     assert recursiveLargestSequence(test) is 4
     assert iterativeLargestSequence(test) is 4
+
+@Test
+def nearby():
+    test = [-2, -1, 1, 2, 3, 4, 6, 7, 8, 10, 11]
+    shuffle(test)
+    assert recursiveLargestSequence(test) is 4
+    assert iterativeLargestSequence(test) is 4
+
 
 @Test
 def mixedPositiveNegative():
@@ -73,6 +81,7 @@ def main():
     one()
     negatives()
     positives()
+    nearby()
     mixedPositiveNegative()
     scientificInts()
 

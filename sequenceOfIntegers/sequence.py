@@ -6,23 +6,29 @@ def recursiveLargestSequence(numbers):
     unorderedSet = set(numbers)
     tailsOfSequences = set()
     largest = 0
-    currentSize = 0
     #===========================================================================
     # Only values that have NOT been placed into the tailsOfSequences set are candidates
     # for being the head of a sequence.
     #===========================================================================
     headsOfSequences = (num for num in unorderedSet if num not in tailsOfSequences)
-
-    def recurseSequence(integer):
-        if integer + 1 not in unorderedSet:
-            result = 1
+        
+    def recurseSequenceByStride(integer, stride):
+        if integer + stride not in unorderedSet:
+            return 0
         else:
-            result = recurseSequence(integer + 1) + 1
-        tailsOfSequences.add(integer)
-        return result
+            tailsOfSequences.add(integer)
+            return recurseSequenceByStride(integer + stride, stride) + 1
 
     for number in headsOfSequences:
-        currentSize = recurseSequence(number)
+        currentSize = 1
+        #=======================================================================
+        # Add the integers above 'number'.
+        #=======================================================================
+        currentSize += recurseSequenceByStride(number, 1)
+        #=======================================================================
+        # Add the integers bellow 'number'.
+        #=======================================================================
+        currentSize += recurseSequenceByStride(number, -1)
         if currentSize > largest:
             largest = currentSize
     return largest
@@ -46,6 +52,15 @@ def iterativeLargestSequence(numbers):
             if nextNumber in unorderedSet:
                 currentSize += 1
                 tailsOfSequences.add(nextNumber)
+            else:
+                sequenceContinues = False
+        sequenceContinues = True
+        nextNumber = number - 1
+        while sequenceContinues:
+            if nextNumber in unorderedSet:
+                currentSize += 1
+                tailsOfSequences.add(nextNumber)
+                nextNumber -= 1
             else:
                 sequenceContinues = False
         if currentSize > largest:
