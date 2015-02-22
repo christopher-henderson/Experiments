@@ -47,6 +47,9 @@ def iterativeLargestSequence(numbers):
         currentSize = 1
         sequenceContinues = True
         nextNumber = number
+        #=======================================================================
+        # Add the integers above 'number'.
+        #=======================================================================
         while sequenceContinues:
             nextNumber += 1
             if nextNumber in unorderedSet:
@@ -55,12 +58,15 @@ def iterativeLargestSequence(numbers):
             else:
                 sequenceContinues = False
         sequenceContinues = True
-        nextNumber = number - 1
+        nextNumber = number
+        #=======================================================================
+        # Add the integers below 'number'.
+        #=======================================================================
         while sequenceContinues:
+            nextNumber -= 1
             if nextNumber in unorderedSet:
                 currentSize += 1
                 tailsOfSequences.add(nextNumber)
-                nextNumber -= 1
             else:
                 sequenceContinues = False
         if currentSize > largest:
