@@ -43,7 +43,6 @@ def iterativeLargestSequence(numbers):
     unorderedSet = set(numbers)
     tailsOfSequences = set()
     largest = 0
-    currentSize = 0
     headsOfSequences = (num for num in unorderedSet if num not in tailsOfSequences)
     for number in headsOfSequences:
         currentSize = 1
