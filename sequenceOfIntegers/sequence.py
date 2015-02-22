@@ -4,8 +4,9 @@
 
 def recursiveLargestSequence(numbers):
     #===========================================================================
-    # Growth function = n + sum(size of sequences)
-    # O(2n)
+    # Growth function: n + sum(size of sequences)
+    # Worst case: 2n
+    # O(n)
     #===========================================================================
     unorderedSet = set(numbers)
     tailsOfSequences = set()
@@ -35,8 +36,9 @@ def recursiveLargestSequence(numbers):
 
 def iterativeLargestSequence(numbers):
     #===========================================================================
-    # Growth function = n + sum(size of sequences)
-    # O(2n)
+    # Growth function: n + sum(size of sequences)
+    # Worst Case: 2n
+    # O(n)
     #===========================================================================
     unorderedSet = set(numbers)
     tailsOfSequences = set()
