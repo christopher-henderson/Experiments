@@ -14,11 +14,12 @@ def recursiveLargestSequence(numbers):
     headsOfSequences = (num for num in unorderedSet if num not in tailsOfSequences)
         
     def recurseSequenceByStride(integer, stride):
-        if integer + stride not in unorderedSet:
+        candidate = integer + stride
+        if candidate not in unorderedSet:
             return 0
         else:
-            tailsOfSequences.add(integer)
-            return recurseSequenceByStride(integer + stride, stride) + 1
+            tailsOfSequences.add(candidate)
+            return recurseSequenceByStride(candidate, stride) + 1
 
     for number in headsOfSequences:
         currentSize = 1
