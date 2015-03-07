@@ -53,7 +53,7 @@ def _calculatedNextPalendrome(result):
     # Set the order of magnitude of the least significant digit to 0.
     #===========================================================================
     lowerOrderOfMagnitude = 0
-    while lowerOrderOfMagnitude <= upperOrderOfMagnitude:
+    while lowerOrderOfMagnitude < upperOrderOfMagnitude:
         #===========================================================================
         # This loop starts at the outer edges of the given number. As lowerOrderOfMagnitude
         # is incremented and upperOrderOfMagnitude is decremented we begin to move towards
