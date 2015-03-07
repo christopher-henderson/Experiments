@@ -1,3 +1,5 @@
+from __future__ import division
+
 def isPalendrome(number):
     if not isinstance(number, str):
         forwards = str(number).replace('-', '')
