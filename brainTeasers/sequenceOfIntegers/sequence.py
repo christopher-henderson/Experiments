@@ -8,29 +8,27 @@ def recursiveLargestSequence(numbers):
     # Worst case: 2n
     # O(n)
     #===========================================================================
-    unorderedSet = set(numbers)
-    tailsOfSequences = set()
     largest = 0
-    headsOfSequences = (num for num in unorderedSet if num not in tailsOfSequences)
-        
+    setCopy = set(numbers)
     def recurseSequenceByStride(integer, stride):
         candidate = integer + stride
-        if candidate not in unorderedSet:
+        if candidate not in setCopy:
             return 0
         else:
-            tailsOfSequences.add(candidate)
+            setCopy.remove(candidate)
             return recurseSequenceByStride(candidate, stride) + 1
 
-    for number in headsOfSequences:
+    while len(setCopy) is not 0:
+        candidate = setCopy.pop()
         currentSize = 1
         #=======================================================================
         # Add the integers above 'number'.
         #=======================================================================
-        currentSize += recurseSequenceByStride(number, 1)
+        currentSize += recurseSequenceByStride(candidate, 1)
         #=======================================================================
         # Add the integers below 'number'.
         #=======================================================================
-        currentSize += recurseSequenceByStride(number, -1)
+        currentSize += recurseSequenceByStride(candidate, -1)
         if currentSize > largest:
             largest = currentSize
     return largest
@@ -41,11 +39,10 @@ def iterativeLargestSequence(numbers):
     # Worst Case: 2n
     # O(n)
     #===========================================================================
-    unorderedSet = set(numbers)
-    tailsOfSequences = set()
+    setCopy = set(numbers)
     largest = 0
-    headsOfSequences = (num for num in unorderedSet if num not in tailsOfSequences)
-    for number in headsOfSequences:
+    while len(setCopy) is not 0:
+        number = setCopy.pop()
         currentSize = 1
         sequenceContinues = True
         nextNumber = number
@@ -54,9 +51,9 @@ def iterativeLargestSequence(numbers):
         #=======================================================================
         while sequenceContinues:
             nextNumber += 1
-            if nextNumber in unorderedSet:
+            if nextNumber in setCopy:
                 currentSize += 1
-                tailsOfSequences.add(nextNumber)
+                setCopy.remove(nextNumber)
             else:
                 sequenceContinues = False
         sequenceContinues = True
@@ -66,9 +63,9 @@ def iterativeLargestSequence(numbers):
         #=======================================================================
         while sequenceContinues:
             nextNumber -= 1
-            if nextNumber in unorderedSet:
+            if nextNumber in setCopy:
                 currentSize += 1
-                tailsOfSequences.add(nextNumber)
+                setCopy.remove(nextNumber)
             else:
                 sequenceContinues = False
         if currentSize > largest:
