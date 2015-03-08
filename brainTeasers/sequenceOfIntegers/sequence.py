@@ -10,6 +10,7 @@ def recursiveLargestSequence(numbers):
     #===========================================================================
     largest = 0
     setCopy = set(numbers)
+
     def recurseSequenceByStride(integer, stride):
         candidate = integer + stride
         if candidate not in setCopy:
