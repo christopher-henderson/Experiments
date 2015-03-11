@@ -1,12 +1,23 @@
 from __future__ import division
 
-def sqrt(x, accuracy=13):
+def sqrt(x, guess=1):
+    '''
+    Implemented using Newton's Method.
+    '''
+    #===========================================================================
+    # When calculating the square root for a range
+    # of integers from 0...1000000 the average number
+    # of iterations before maximum precision of the algorithm is
+    # reached is 15.0124850125
+    #===========================================================================
     if x < 0:
         raise ValueError('math domain error')
     if x == 0:
         return 0.0
     newtonEstimation = lambda a: (x/a + a)/2
-    guess = 1
-    for iteration in xrange(accuracy):
-        guess = newtonEstimation(guess)
-    return guess
+    currentGuess = newtonEstimation(guess)
+    previousGuess = guess
+    while previousGuess != currentGuess:
+        previousGuess = currentGuess
+        currentGuess = newtonEstimation(currentGuess)
+    return currentGuess
