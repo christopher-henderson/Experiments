@@ -8,5 +8,3 @@ def quickSort(collection):
     left = quickSort([item for item in collection if item <= middle])
     right = quickSort([item for item in collection if item > middle])
     return left + [middle] + right
-
-print (quickSort([3,6,5,5,7,1,8]))
