@@ -52,10 +52,10 @@ class Node(object):
 
     def postOrder(self):
         if self.left:
-            for element in self.left.preOrder():
+            for element in self.left.postOrder():
                 yield element
         if self.right:
-            for element in self.right.preOrder():
+            for element in self.right.postOrder():
                 yield element
         yield self.element
 
@@ -82,4 +82,4 @@ class BinaryTree(object):
         elif order == 'postOrder':
             return [item for item in self.root.postOrder()]
         else:
-            raise NotImplementedError('{ORDER} is not a supported algorithm.'.format(ORDER=order))
+            raise NotImplementedError('{ORDER} is not a supported traversal algorithm.'.format(ORDER=order))
