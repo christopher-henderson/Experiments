@@ -2,22 +2,25 @@ from __future__ import division
 
 class Node(object):
     
-    def __init__(self, element, leftSide, rightSide):
+    def __init__(self, element, leftSide, rightSide, parent=None):
         self.element = element
+        self.parent = parent
         if len(leftSide) is 0:
             self.left = None
         else:
             leftMiddle = len(leftSide)//2
             self.left = Node(leftSide[leftMiddle],
                              leftSide[:leftMiddle:],
-                             leftSide[leftMiddle+1::])
+                             leftSide[leftMiddle+1::],
+                             parent=self)
         if len(rightSide) is 0:
             self.right = None
         else:
             rightMiddle = len(rightSide)//2
             self.right = Node(rightSide[rightMiddle],
                               rightSide[:rightMiddle:],
-                              rightSide[rightMiddle+1::])
+                              rightSide[rightMiddle+1::],
+                              parent=self)
 
     def __contains__(self, other):
         if other == self.element:
@@ -78,3 +81,5 @@ class BinaryTree(object):
             return [item for item in self.root.preOrder()]
         elif order == 'postOrder':
             return [item for item in self.root.postOrder()]
+        else:
+            raise NotImplementedError('{ORDER} is not a supported algorithm.'.format(ORDER=order))
