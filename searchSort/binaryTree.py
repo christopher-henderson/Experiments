@@ -1,4 +1,4 @@
-from __future__ import division
+from __future__ import division 
 
 class Node(object):
     
@@ -61,8 +61,8 @@ class Node(object):
 
 class BinaryTree(object):
     
-    def __init__(self, collection):
-        sorted(collection)
+    def __init__(self, collection, key=None):
+        sorted(collection, key=None)
         middle = len(collection) // 2
         self.root = Node(collection[middle],
                          collection[:middle:],
