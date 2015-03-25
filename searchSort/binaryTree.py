@@ -2,35 +2,33 @@ from __future__ import division
 
 class Node(object):
     
-    def __init__(self, element, leftSide, rightSide, parent=None):
+    def __init__(self, element, parent=None):
         self.element = element
         self.parent = parent
-        if len(leftSide) is 0:
-            self.left = None
-        else:
-            leftMiddle = len(leftSide)//2
-            self.left = Node(leftSide[leftMiddle],
-                             leftSide[:leftMiddle:],
-                             leftSide[leftMiddle+1::],
-                             parent=self)
-        if len(rightSide) is 0:
-            self.right = None
-        else:
-            rightMiddle = len(rightSide)//2
-            self.right = Node(rightSide[rightMiddle],
-                              rightSide[:rightMiddle:],
-                              rightSide[rightMiddle+1::],
-                              parent=self)
+        self.left = None
+        self.right = None
 
     def __contains__(self, other):
         if other == self.element:
             return True
-        if self.left is not None and other in self.left:
-            return True
-        if self.right is not None and other in self.right:
-            return True
+        elif other < self.element and self.left is not None:
+            return other in self.left
+        elif other > self.element and self.right is not None:
+            return other in self.right
         else:
             return False
+
+    def insert(self, other):
+        if other >= self.element:
+            if self.right is not None:
+                self.right.insert(other)
+            else:
+                self.right = Node(other, parent=self)
+        elif other < self.element:
+            if self.left is not None:
+                self.left.insert(other)
+            else:
+                self.left = Node(other, parent=self)
 
     def inOrder(self):
         if self.left:
@@ -61,18 +59,19 @@ class Node(object):
 
 class BinaryTree(object):
     
-    def __init__(self, collection, key=None):
-        sorted(collection, key=None)
-        middle = len(collection) // 2
-        self.root = Node(collection[middle],
-                         collection[:middle:],
-                         collection[middle+1::])
+    def __init__(self, collection):
+        self.root = Node(collection[0])
+        for item in collection[1::]:
+            self.root.insert(item)
     
     def __contains__(self, element):
         return element in self.root
     
     def __str__(self):
         return str(self.list())
+    
+    def insert(self, element):
+        self.root.insert(element)
     
     def list(self, order='inOrder'):
         if order == 'inOrder':
@@ -83,3 +82,7 @@ class BinaryTree(object):
             return [item for item in self.root.postOrder()]
         else:
             raise NotImplementedError('{ORDER} is not a supported traversal algorithm.'.format(ORDER=order))
+
+
+tree = BinaryTree([72,61,73])
+print (tree.list(order='postOrder'))
