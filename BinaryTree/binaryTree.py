@@ -45,7 +45,7 @@ class BinaryTree(object):
         return element in self.root
     
     def __str__(self):
-        return str(self.list())
+        return str(self.inOrder())
     
     def isEmpty(self):
         return self.root is None
@@ -55,17 +55,17 @@ class BinaryTree(object):
             self.root = Node(element)
         else:
             self.root.insert(element)
+        return self
     
-    def list(self, order='inOrder'):
-        if order == 'inOrder':
-            return tuple(item for item in self.root.inOrder())
-        elif order == 'preOrder':
-            return tuple(item for item in self.root.preOrder())
-        elif order == 'postOrder':
-            return tuple(item for item in self.root.postOrder())
-        else:
-            raise UnsupportedTraversalError(order)
+    def inOrder(self):
+        return tuple(item for item in self.root.inOrder())
     
+    def preOrder(self):
+        return tuple(item for item in self.root.preOrder())
+    
+    def postOrder(self):
+        return tuple(item for item in self.root.postOrder())
+
     @NotEmpty
     def decendentsOf(self, element):
         return self.root.descendents(element)
@@ -73,6 +73,14 @@ class BinaryTree(object):
     @NotEmpty
     def ancestorsOf(self, element):
         return tuple(ancestor for ancestor in self.root.ancestors(element))
+
+    @NotEmpty
+    def isAncestorOf(self, targetAncestor, targetDescendent):
+        return self.root.isAncestorOf(targetAncestor, targetDescendent)
+
+    @NotEmpty
+    def isDescendentOf(self, targetDescendent, targetAncestor):
+        return self.root.isAncestorOf(targetAncestor, targetDescendent)
 
     @NotEmpty
     def min(self):
@@ -90,19 +98,19 @@ class BinaryTree(object):
     def detachAt(self, element):
         return BinaryTree(self.root.detachAt(element))
 
+    @NotEmpty
+    def levelOf(self, element):
+        return self.root.levelOf(element)
+
+    @NotEmpty
     def height(self):
-        if self.isEmpty():
-            return 0
         return max(self.root.height())
 
     def attach(self, tree):
-        if not isinstance(tree, Node):
+        if not isinstance(tree, BinaryTree):
             raise TypeError('Expected a Node. Received a {CLASS}'.format(CLASS=tree.__class__))
         if self.root is None:
             self.root = tree
         else:
             self.root.attach(tree.root)
-
-tree = BinaryTree([65, 61, 77, 53, 62, 72, 80, 55])
-print (tree.ancestorsOf(53))
-print (tree.height())
+        return self
