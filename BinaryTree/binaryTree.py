@@ -67,20 +67,20 @@ class BinaryTree(object):
         return tuple(item for item in self.root.postOrder())
 
     @NotEmpty
-    def decendentsOf(self, element):
-        return self.root.descendents(element)
+    def decendantsOf(self, element):
+        return self.root.descendants(element)
 
     @NotEmpty
     def ancestorsOf(self, element):
         return tuple(ancestor for ancestor in self.root.ancestors(element))
 
     @NotEmpty
-    def isAncestorOf(self, targetAncestor, targetDescendent):
-        return self.root.isAncestorOf(targetAncestor, targetDescendent)
+    def isAncestorOf(self, targetAncestor, targetDescendant):
+        return self.root.isAncestorOf(targetAncestor, targetDescendant)
 
     @NotEmpty
-    def isDescendentOf(self, targetDescendent, targetAncestor):
-        return self.root.isAncestorOf(targetAncestor, targetDescendent)
+    def isDescendantOf(self, targetDescendant, targetAncestor):
+        return self.root.isAncestorOf(targetAncestor, targetDescendant)
 
     @NotEmpty
     def min(self):

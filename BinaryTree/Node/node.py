@@ -48,47 +48,47 @@ class Node(object):
         else:
             raise NoSuchElement(element)
 
-    def isAncestorOf(self, targetAncestor, targetDescendent, ancestorSeen=False):
+    def isAncestorOf(self, targetAncestor, targetDescendant, ancestorSeen=False):
         if targetAncestor == self.element:
             ancestorSeen = True
-        if targetDescendent == self.element:
+        if targetDescendant == self.element:
             #===================================================================
             # This covers the case of checking duplicate values within the tree
-            # which can result in similar values having an ancestor/descendent
+            # which can result in similar values having an ancestor/descendant
             # relationship. But ONLY if there actually are duplicates.
             # If the programmer does isAncestorOf(5,5) and there is only one five,
-            # then the answer is - no, five is not its own ancestor/descendent.
+            # then the answer is - no, five is not its own ancestor/descendant.
             #===================================================================
-            if targetAncestor == targetDescendent:
+            if targetAncestor == targetDescendant:
                 if self.right is not None:
-                    return self.right.element == targetDescendent
+                    return self.right.element == targetDescendant
                 else:
                     return False
             else:
                 return ancestorSeen
-        elif targetDescendent < self.element and self.left is not None:
-            return self.left.isAncestorOf(targetAncestor, targetDescendent, ancestorSeen)
-        elif targetDescendent > self.element and self.right is not None:
-            return self.right.isAncestorOf(targetAncestor, targetDescendent, ancestorSeen)
+        elif targetDescendant < self.element and self.left is not None:
+            return self.left.isAncestorOf(targetAncestor, targetDescendant, ancestorSeen)
+        elif targetDescendant > self.element and self.right is not None:
+            return self.right.isAncestorOf(targetAncestor, targetDescendant, ancestorSeen)
         else:
-            raise NoSuchElement(targetDescendent)
+            raise NoSuchElement(targetDescendant)
 
-    def descendents(self, element):
+    def descendants(self, element):
         '''
-        @return tuple of the target element's descendents.
+        @return tuple of the target element's descendants.
         '''
         if element == self.element:
-            return tuple([descendent for descendent in self._buildDescendents()])
+            return tuple([descendant for descendant in self._buildDescendants()])
         elif element < self.element and self.left is not None:
-            return self.left.descendents(element)
+            return self.left.descendants(element)
         elif element > self.element and self.right is not None:
-            return self.right.descendents(element)
+            return self.right.descendants(element)
         else:
             raise NoSuchElement(element)
 
-    def _buildDescendents(self):
+    def _buildDescendants(self):
         '''
-        @return Generator of this node's descendents traversed in order.
+        @return Generator of this node's descendants traversed in order.
         '''
         if self.left:
             for element in self.left.inOrder():
