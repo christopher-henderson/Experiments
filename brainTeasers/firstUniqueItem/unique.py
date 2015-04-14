@@ -1,19 +1,30 @@
-from collections import OrderedDict
+try:
+    from Queue import Queue
+except ImportError:
+    from queue import Queue
 
-#===============================================================================
-# Write a function that returns the position of the
-# first, non-repeating, character within a given string input.
-#===============================================================================
+'''
+Write a function that returns the position of the
+first, non-repeating, character within a given string input.
+
+O(n)
+
+Note: Dyanmic languages strike again, so this will work with
+any subscriptable, iterable, object and not just strings.
+'''
 
 def firstUniqueOfCollection(collection):
-    invertedIndex = OrderedDict()
+    isUnique = dict()
+    metaDataQueue = Queue()
     for index,element in enumerate(collection):
-        if element not in invertedIndex:
-            invertedIndex[element] = {'index': index, 'count': 1}
+        if element not in isUnique:
+            isUnique[element] = True
+            metaDataQueue.put({'element': element, 'index': index})
         else:
-            invertedIndex[element]['count'] += 1
-    for element,metaData in invertedIndex.items():
-        if metaData['count'] is 1:
-            return metaData['index']
+            isUnique[element] = False
+    while not metaDataQueue.empty():
+        record = metaDataQueue.get()
+        if isUnique[record['element']]:
+            return record['index']
     else:
         return -1
