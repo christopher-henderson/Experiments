@@ -4,62 +4,108 @@
 # deserialzies
 #
 
+from random import randrange
+
 
 class Node(object):
 
-    def __init__(self, value, left=None, right=None):
+    def __init__(self, value=None, left=None, right=None):
         self.value = value
         self._left = left
         self._right = right
 
     def add(self, node):
-        pass
+        if self <= node:
+            if self.right is None:
+                self.right = Node(node)
+            else:
+                self.right.add(node)
+        else:
+            if self.left is None:
+                self.left = Node(node)
+            else:
+                self.left.add(node)
 
-    def serialize(self, serialized):
-        sub_serialized = list()
-        sub_serialized.append(self.value)
-        sub_serialized.append(
-            self.left.serialize(
-                sub_serialized) if self.left is not None else [])
-        sub_serialized.append(
-            self.right.serialize(
-                sub_serialized)if self.right is not None else [])
-        serialized.append(sub_serialized)
-        return sub_serialized
+    def serialize(self):
+        return [self.value,
+                self.left.serialize() if self.left is not None else [],
+                self.right.serialize() if self.right is not None else []
+                ]
 
     @staticmethod
-    def deserialize(serialzied):
-        print (serialzied)
-        if len(serialzied) is 1:
-            return Node(serialzied[0])
-        root = Node(serialzied[0])
-        if len(serialzied[1]) is not 0:
-            root.left = Node.deserialize(serialzied[1])
-        else:
-            root.left = None
-        if len(serialzied[2]) is not 0:
-            root.right = Node.deserialize(serialzied[2])
-        else:
-            root.right = None
+    def deserialize(serialized_tree):
+        root = Node(serialized_tree[0])
+        print serialized_tree
+        if serialized_tree[1]:
+            root.left = Node.deserialize(serialized_tree[1])
+        if serialized_tree[2]:
+            root.right = Node.deserialize(serialized_tree[2])
         return root
 
+    @property
+    def value(self):
+        return self._value
+
+    @value.setter
+    def value(self, value):
+        self._value = value
 
     @property
     def right(self):
         return self._right
 
     @right.setter
-    def right(self, value):
+    def right(self, right):
         # print ("hello from adding a right", value)
-        self._right = value
+        self._right = right
 
     @property
     def left(self):
         return self._left
 
     @left.setter
-    def left(self, value):
-        self._left = value
+    def left(self, left):
+        self._left = left
+
+    def equals(self, other):
+        # Recursive equality rather than simple one-to-one node comparison.
+        if not isinstance(other, Node):
+            return False
+        root_is_equal = self == other
+        left_is_equal = self.left.equals(other.left) if self.left is not None else other.left is None
+        right_is_equal = self.right.equals(other.right) if self.right is not None else other.right is None
+        return root_is_equal and left_is_equal and right_is_equal
+
+    def __repr__(self):
+        return "[<{ROOT}>, <{LEFT}> <{RIGHT}>]".format(
+                ROOT=self.value,
+                LEFT=self.left,
+                RIGHT=self.right
+            )
+
+    def __str__(self):
+        return self.__repr__()
+
+    def __eq__(self, other):
+        if self is other:
+            return True
+        if isinstance(other, Node):
+            return self.value == other.value
+        return self.value == other
+
+    def __lt__(self, other):
+        if isinstance(other, Node):
+            return self.value < other.value
+        return self.value < other
+
+    def __gt__(self, other):
+        return not(self <= other)
+
+    def __le__(self, other):
+        return self < other or self == other
+
+    def __ge__(self, other):
+        return not self < other
 
 
 class BinaryTree(object):
@@ -68,22 +114,68 @@ class BinaryTree(object):
         self.root = root
 
     def add(self, node):
-        self.root.add(node)
+        if self.root is None:
+            self.root = Node(node)
+        else:
+            self.root.add(node)
 
     def serialize(self):
-        serialzied = list()
-        return self.root.serialize(serialzied)
+        if self.root is None:
+            return [None, [], []]
+        return self.root.serialize()
 
-    def deserialize(self, serialzied):
-        # [A (B (C) ()) ()]
-        self.root = Node.deserialize(serialzied)
+    @staticmethod
+    def deserialize(serialized):
+        return BinaryTree(Node.deserialize(serialized))
 
+    def __eq__(self, other):
+        if not isinstance(other, BinaryTree):
+            return False
+        if self is other:
+            return True
+        if self.root is None:
+            return other.root is None
+        return self.root.equals(other.root)
+
+    def __repr__(self):
+        return self.root.__repr__()
+
+
+def build_random_tree(n):
+    binary_tree = BinaryTree()
+    for _ in range(n):
+        # Add random characters from the [A-Z] ASCII range.
+        character = chr(randrange(65, 91))
+        binary_tree.add(character)
+    return binary_tree
+
+def test_binary_tree():
+    for number_of_elements in range(1, 20):
+        binary_tree = build_random_tree(number_of_elements)
+        serialized_tree = binary_tree.serialize()
+        derived_tree = BinaryTree.deserialize(serialized_tree)
+        deserialized_tree = derived_tree.serialize()
+        assert binary_tree == derived_tree, '''
+            FAILED to construct equivalent tree from serialized: {} :: {}
+        '''.format(binary_tree, derived_tree)
+        assert serialized_tree == deserialized_tree, '''
+            FAILED to serialize to the same structure: {} :: {}
+        '''.format(serialized_tree, deserialized_tree)
 
 def main():
-    serialzied = ['A', ['B', ['C'], []], []]
-    tree = BinaryTree()
-    tree.deserialize(serialzied)
-    print (tree.serialize())
+    print ("TESTING")
+    test_binary_tree()
+    print ("PASSED")
+    # serialized = ['A', ['B', ['C'], []], []]
+    # binary_tree = build_random_tree(5)
+    # print (binary_tree)
+    # serialized_tree = binary_tree.serialize()
+    # print (serialized_tree)
+    # deserialized_tree = BinaryTree.deserialize(serialized_tree)
+    # print (deserialized_tree)
+    # print (binary_tree == deserialized_tree)
+    # print (deserialized_tree.serialize())
+    # print (deserialized_tree == binary_tree)
 
 main()
 
