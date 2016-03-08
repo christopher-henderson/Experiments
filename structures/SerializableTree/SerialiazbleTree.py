@@ -1,30 +1,38 @@
-# binary tree
-# class for a tree
-# serializes into a file
-# deserialzies
-#
+'''
+A serializable and deserializable binary tree.
+'''
 
 from random import randrange
 
 
 class Node(object):
 
+    '''
+    A node of a given binary search tree. Holds a reference to its own value
+    and to its two children. Values that less than or equal to this node are
+    added to the left, values that are greater than this node are added to the
+    right.
+    '''
+
     def __init__(self, value=None, left=None, right=None):
         self.value = value
         self._left = left
         self._right = right
 
-    def add(self, node):
-        if self <= node:
+    def add(self, value):
+        if self.value is None:
+            self.value = value
+            return
+        if self < value:
             if self.right is None:
-                self.right = Node(node)
+                self.right = Node(value)
             else:
-                self.right.add(node)
+                self.right.add(value)
         else:
             if self.left is None:
-                self.left = Node(node)
+                self.left = Node(value)
             else:
-                self.left.add(node)
+                self.left.add(value)
 
     def serialize(self):
         return [self.value,
@@ -55,7 +63,6 @@ class Node(object):
 
     @right.setter
     def right(self, right):
-        # print ("hello from adding a right", value)
         self._right = right
 
     @property
@@ -67,7 +74,10 @@ class Node(object):
         self._left = left
 
     def equals(self, other):
-        # Recursive equality rather than simple one-to-one node comparison.
+        '''
+        Recursive equality check for deep tree comparisons.
+        For one-to-one node comparisons see Node.__eq__
+        '''
         if not isinstance(other, Node):
             return False
         root_is_equal = self == other
@@ -79,6 +89,9 @@ class Node(object):
         return self.value is not None
 
     def __repr__(self):
+        '''
+
+        '''
         return "[<{ROOT}>, <{LEFT}> <{RIGHT}>]".format(
                 ROOT=self.value,
                 LEFT=self.left,
@@ -89,6 +102,12 @@ class Node(object):
         return self.__repr__()
 
     def __eq__(self, other):
+        '''
+        Simple one to one comparison. This simply tests the value of this
+        node against the value of another (or a raw value). It does not test
+        its children for equivalency. For deeper equivalency checks refer to
+        Node.equals
+        '''
         if self is other:
             return True
         if isinstance(other, Node):
@@ -96,6 +115,15 @@ class Node(object):
         return self.value == other
 
     def __lt__(self, other):
+        '''
+        Less than comparison against a single other node or a comparable
+        raw value.
+
+        E.G.
+            Node(5) < Node(6)
+        or
+            Node(5) < 6
+        '''
         if isinstance(other, Node):
             return self.value < other.value
         return self.value < other
@@ -112,18 +140,26 @@ class Node(object):
 
 class BinaryTree(object):
 
+    '''
+    A serializable and deserializable binary tree.
+    '''
+
     def __init__(self, root=None):
-        self.root = root if root is not None else Node()
+        if isinstance(root, Node):
+            self.root = root
+        else:
+            self.root = Node()
+            if hasattr(root, "__iter__"):
+                # Construct the tree from an iterable of values.
+                for value in root:
+                    self.add(value)
+            else:
+                self.add(root)
 
     def add(self, value):
-        if not self:
-            self.value = value
-        else:
-            self.root.add(value)
+        self.root.add(value)
 
     def serialize(self):
-        if self.root is None:
-            return [None, [], []]
         return self.root.serialize()
 
     @staticmethod
@@ -135,8 +171,6 @@ class BinaryTree(object):
             return False
         if self is other:
             return True
-        if self.root is None:
-            return other.root is None
         return self.root.equals(other.root)
 
     def __repr__(self):
@@ -144,12 +178,8 @@ class BinaryTree(object):
 
 
 def build_random_tree(n):
-    binary_tree = BinaryTree()
-    for _ in range(n):
-        # Add random characters from the [A-Z] ASCII range.
-        character = chr(randrange(65, 91))
-        binary_tree.add(character)
-    return binary_tree
+    # Build a binary tree from n number of random upper case ASCII characters.
+    return BinaryTree(chr(randrange(65, 91)) for _ in range(n))
 
 
 def test_binary_tree():
@@ -162,15 +192,26 @@ def test_binary_tree():
         assert binary_tree == derived_tree, '''
             FAILED to construct equivalent tree from serialized: {} :: {}
         '''.format(binary_tree, derived_tree)
-        # Asser that both trees serialize to the same structure.
+        # Assert that both trees serialize to the same structure.
         assert serialized_tree == deserialized_tree, '''
             FAILED to serialize to the same structure: {} :: {}
         '''.format(serialized_tree, deserialized_tree)
 
 
+def test_hardcoded_example():
+    serialized = ['A', ['B', ['C', [], []], []], []]
+    binary_tree = BinaryTree.deserialize(serialized)
+    deserialized_tree = binary_tree.serialize()
+    assert serialized == deserialized_tree, '''
+        FAILED to serialize to same structure: {} :: {}
+    '''.format(serialized, deserialized_tree)
+
+
 def main():
-    print ("TESTING")
+    print ("Testing random trees.")
     test_binary_tree()
-    print ("PASSED")
+    print ("Testing hardcoded tree.")
+    test_hardcoded_example()
+    print ("SUCCESS")
 
 main()
