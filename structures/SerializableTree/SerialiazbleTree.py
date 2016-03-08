@@ -35,7 +35,6 @@ class Node(object):
     @staticmethod
     def deserialize(serialized_tree):
         root = Node(serialized_tree[0])
-        print serialized_tree
         if serialized_tree[1]:
             root.left = Node.deserialize(serialized_tree[1])
         if serialized_tree[2]:
@@ -76,6 +75,9 @@ class Node(object):
         right_is_equal = self.right.equals(other.right) if self.right is not None else other.right is None
         return root_is_equal and left_is_equal and right_is_equal
 
+    def __bool__(self):
+        return self.value is not None
+
     def __repr__(self):
         return "[<{ROOT}>, <{LEFT}> <{RIGHT}>]".format(
                 ROOT=self.value,
@@ -111,13 +113,13 @@ class Node(object):
 class BinaryTree(object):
 
     def __init__(self, root=None):
-        self.root = root
+        self.root = root if root is not None else Node()
 
-    def add(self, node):
-        if self.root is None:
-            self.root = Node(node)
+    def add(self, value):
+        if not self:
+            self.value = value
         else:
-            self.root.add(node)
+            self.root.add(value)
 
     def serialize(self):
         if self.root is None:
@@ -149,42 +151,26 @@ def build_random_tree(n):
         binary_tree.add(character)
     return binary_tree
 
+
 def test_binary_tree():
-    for number_of_elements in range(1, 20):
+    for number_of_elements in range(100):
         binary_tree = build_random_tree(number_of_elements)
         serialized_tree = binary_tree.serialize()
         derived_tree = BinaryTree.deserialize(serialized_tree)
         deserialized_tree = derived_tree.serialize()
+        # Assert that both instances of the tree are equivalent.
         assert binary_tree == derived_tree, '''
             FAILED to construct equivalent tree from serialized: {} :: {}
         '''.format(binary_tree, derived_tree)
+        # Asser that both trees serialize to the same structure.
         assert serialized_tree == deserialized_tree, '''
             FAILED to serialize to the same structure: {} :: {}
         '''.format(serialized_tree, deserialized_tree)
+
 
 def main():
     print ("TESTING")
     test_binary_tree()
     print ("PASSED")
-    # serialized = ['A', ['B', ['C'], []], []]
-    # binary_tree = build_random_tree(5)
-    # print (binary_tree)
-    # serialized_tree = binary_tree.serialize()
-    # print (serialized_tree)
-    # deserialized_tree = BinaryTree.deserialize(serialized_tree)
-    # print (deserialized_tree)
-    # print (binary_tree == deserialized_tree)
-    # print (deserialized_tree.serialize())
-    # print (deserialized_tree == binary_tree)
 
 main()
-
-# me (left) (right)
-# A (B (C) ()) ()
-# A (B) (C)
-
-# in order order
-#     left me right
-
-# pre order
-#     me left right
