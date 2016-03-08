@@ -89,9 +89,6 @@ class Node(object):
         return self.value is not None
 
     def __repr__(self):
-        '''
-
-        '''
         return "[<{ROOT}>, <{LEFT}> <{RIGHT}>]".format(
                 ROOT=self.value,
                 LEFT=self.left,
